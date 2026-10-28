@@ -89,7 +89,7 @@ form{display:grid;gap:14px}
 @media (max-width:420px){.row3{grid-template-columns:repeat(2,minmax(0,1fr))}}
 label.f{display:grid;gap:4px;min-width:0}
 label.f span{font-family:var(--f-num);text-transform:uppercase;letter-spacing:.08em;font-size:13px;font-weight:600;color:var(--muted)}
-input[type=text],input[type=date],input[type=time],textarea{width:100%;min-width:0;background:var(--field);border:1.5px solid var(--line);border-radius:4px;padding:10px 11px;font-size:17px}
+input[type=text],input[type=password],input[type=date],input[type=time],textarea{width:100%;min-width:0;background:var(--field);border:1.5px solid var(--line);border-radius:4px;padding:10px 11px;font-size:17px}
 input:focus,textarea:focus{border-color:var(--ink)}
 textarea{resize:vertical;min-height:44px}
 .seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden;width:max-content}
@@ -406,8 +406,9 @@ function loadDay(date){
     $('fAjKm').value=r.ajKm?String(r.ajKm).replace('.',','):'';$('fAjMin').value=r.ajMin?String(r.ajMin):'';setMode('trechos')}
   else{$('fKmTot').value=String(r.km||0).replace('.',',');$('fMinTot').value=r.min?Math.floor(r.min/60)+':'+String(r.min%60).padStart(2,'0'):'';setMode('totais')}
   $('editTag').textContent='editando '+dm(date);$('bDel').hidden=false;
-  $('lancar').scrollIntoView({behavior:'smooth',block:'start'});renderPreview();
+  goTo('lancar');renderPreview();
 }
+function goTo(id){var el=$(id),bar=document.querySelector('.top');var y=el.getBoundingClientRect().top+window.pageYOffset-(bar?bar.offsetHeight:0)-12;window.scrollTo({top:Math.max(0,y),behavior:'smooth'})}
 function say(id,t,k){var e=$(id);e.textContent=t;e.className='msg'+(k?' '+k:'')}
 async function saveDay(folga){
   if(!state.db){say('msgDay','Dados ainda não carregados.','err');return}
@@ -451,7 +452,7 @@ function loadFuel(id){
   var f=state.fuel.find(function(x){return x.id===id});if(!f)return;
   state.editingFuel=id;$('aDate').value=f.data;$('aKm').value=f.km!=null?String(f.km).replace('.',','):'';$('aLit').value=f.litros!=null?String(f.litros).replace('.',','):'';
   $('aTot').value=f.total!=null?String(f.total).replace('.',','):'';$('aDesc').value=f.desconto?String(f.desconto).replace('.',','):'';$('aRod').value=f.kmRodado?String(f.kmRodado).replace('.',','):'';$('aObs').value=f.obs||'';
-  $('fuelTag').textContent='editando '+dm(f.data);$('abastecer').scrollIntoView({behavior:'smooth',block:'start'});renderFuelPreview();
+  $('fuelTag').textContent='editando '+dm(f.data);goTo('abastecer');renderFuelPreview();
 }
 async function saveFuel(){
   if(!state.db){say('msgFuel','Dados ainda não carregados.','err');return}
@@ -472,7 +473,7 @@ function renderAll(){
 }
 
 /* ---------- eventos ---------- */
-document.querySelectorAll('[data-go]').forEach(function(b){b.addEventListener('click',function(){$(b.getAttribute('data-go')).scrollIntoView({behavior:'smooth',block:'start'})})});
+document.querySelectorAll('[data-go]').forEach(function(b){b.addEventListener('click',function(){goTo(b.getAttribute('data-go'))})});
 $('theme').addEventListener('click',function(){
   var cur=document.documentElement.getAttribute('data-theme');
   var dark=cur?cur==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -498,7 +499,7 @@ $('bMore').addEventListener('click',function(){state.showAll=!state.showAll;rend
 
 /* ---------- início ---------- */
 clearDay(false);clearFuel();renderAll();
-var APP_URL='https://script.google.com/macros/s/AKfycbxee3IIS5lZ3QEB8YugPmACb7UwuuS5hTRi3dap9JIduvZqb-U3Lm1rYRCVRnw6dmnFtg/exec'; // <- linha para colar o link do Web App (termina em /exec)
+var APP_URL='COLE_AQUI_O_LINK_DO_APP_SCRIPT'; // <- linha para colar o link do Web App (termina em /exec)
 var TOKEN='';try{TOKEN=localStorage.getItem('diario-chave')||''}catch(e){}
 async function gs(fn,arg){
   if(APP_URL.indexOf('https://')!==0)throw new Error('cole o link do Apps Script na linha APP_URL do index.html');
@@ -511,7 +512,7 @@ async function gs(fn,arg){
 }
 function askToken(msg){
   $('hero').innerHTML='<div class="sign-in"><div><div class="lbl">Acesso</div><h2>Chave do diário</h2><p style="margin:8px 0 0;color:var(--sign-dim)">'+esc(msg||'Digite a chave definida no Code.gs. Ela fica salva só neste aparelho.')+'</p></div>'+
-   '<div style="display:grid;gap:10px;align-content:center"><input type="text" id="tk" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="chave"><button class="btn primary" type="button" id="tkGo">Entrar</button></div></div>';
+   '<div style="display:grid;gap:10px;align-content:center"><input type="password" id="tk" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="chave"><button class="btn primary" type="button" id="tkGo">Entrar</button></div></div>';
   return new Promise(function(res){
     function go(){TOKEN=$('tk').value.trim();try{localStorage.setItem('diario-chave',TOKEN)}catch(e){}res()}
     $('tkGo').onclick=go;$('tk').onkeydown=function(e){if(e.key==='Enter')go()};$('tk').focus()});
