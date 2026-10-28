@@ -499,7 +499,7 @@ $('bMore').addEventListener('click',function(){state.showAll=!state.showAll;rend
 
 /* ---------- início ---------- */
 clearDay(false);clearFuel();renderAll();
-var APP_URL='COLE_AQUI_O_LINK_DO_APP_SCRIPT'; // <- linha para colar o link do Web App (termina em /exec)
+var APP_URL='https://script.google.com/macros/s/AKfycbxee3IIS5lZ3QEB8YugPmACb7UwuuS5hTRi3dap9JIduvZqb-U3Lm1rYRCVRnw6dmnFtg/exec'; // <- linha para colar o link do Web App (termina em /exec)
 var TOKEN='';try{TOKEN=localStorage.getItem('diario-chave')||''}catch(e){}
 async function gs(fn,arg){
   if(APP_URL.indexOf('https://')!==0)throw new Error('cole o link do Apps Script na linha APP_URL do index.html');
