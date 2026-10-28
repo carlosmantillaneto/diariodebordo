@@ -89,7 +89,8 @@ form{display:grid;gap:14px}
 @media (max-width:420px){.row3{grid-template-columns:repeat(2,minmax(0,1fr))}}
 label.f{display:grid;gap:4px;min-width:0}
 label.f span{font-family:var(--f-num);text-transform:uppercase;letter-spacing:.08em;font-size:13px;font-weight:600;color:var(--muted)}
-input[type=text],input[type=password],input[type=date],input[type=time],textarea{width:100%;min-width:0;background:var(--field);border:1.5px solid var(--line);border-radius:4px;padding:10px 11px;font-size:17px}
+input[type=text],input[type=password],input[type=date],input[type=time],textarea{width:100%;min-width:0;background:var(--field);border:1.5px solid var(--line);border-radius:4px;padding:10px 11px;font-size:17px;color:var(--ink)}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.8}
 input:focus,textarea:focus{border-color:var(--ink)}
 textarea{resize:vertical;min-height:44px}
 .seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden;width:max-content}
@@ -521,13 +522,22 @@ async function reload(){
   var d=JSON.parse(await gs('getData'));
   state.days=d.dias;state.fuel=d.abastecimentos;state.db=true;state.ready=true;renderAll();
 }
+function showFail(msg){
+  $('hero').innerHTML='<div class="sign-in"><div><div class="lbl">Sem conexão com a planilha</div><h2>Não consegui carregar</h2><p style="margin:8px 0 0;color:var(--sign-dim)">'+esc(msg)+'</p></div>'+
+   '<div style="display:grid;gap:10px;align-content:center"><button class="btn primary" type="button" id="fRetry">Tentar de novo</button><button class="btn" type="button" id="fKey" style="color:var(--sign-ink);border-color:var(--sign-ink)">Trocar chave</button></div></div>';
+  return new Promise(function(res){$('fRetry').onclick=function(){res('retry')};$('fKey').onclick=function(){res('key')}});
+}
 (async function(){
   if(!TOKEN)await askToken();
-  for(var t=0;t<4;t++){
+  for(var t=0;t<30;t++){
     try{await reload();$('dbState').textContent='Dados salvos na sua planilha do Google';return}
     catch(e){
       if(e&&e.auth){TOKEN='';try{localStorage.removeItem('diario-chave')}catch(x){}await askToken('Chave incorreta. Tente de novo.');continue}
-      $('dbState').textContent='Falha ao ler a planilha: '+((e&&e.message)||'erro');return}
+      var m=(e&&e.message)||'erro';
+      $('dbState').textContent='Falha: '+m;
+      var c=await showFail('Erro: '+m+'. Confira se a implantação está como "Qualquer pessoa" e se o APP_URL termina em /exec.');
+      if(c==='key'){TOKEN='';try{localStorage.removeItem('diario-chave')}catch(x){}await askToken('Digite a chave de novo.')}
+    }
   }
 })();
 })();
