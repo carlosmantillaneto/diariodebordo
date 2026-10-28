@@ -168,13 +168,12 @@ textarea{resize:vertical;min-height:44px}
           </div>
           <div class="row">
             <label class="f"><span>Ajuste de km (+/−)</span><input type="text" inputmode="decimal" id="fAjKm" placeholder="0"></label>
-            <label class="f"><span>Ajuste de minutos (+/−)</span><input type="text" inputmode="decimal" id="fAjMin" placeholder="0"></label>
+            <label class="f"><span>Pausa ou ajuste de min (+/−)</span><input type="text" inputmode="decimal" id="fAjMin" placeholder="ex.: -25 para pausa"></label>
           </div>
-          <div class="row3">
+          <div class="row">
             <label class="f"><span>Uber (total do dia)</span><input type="text" inputmode="decimal" id="fUber" placeholder="0,00"></label>
             <label class="f"><span>99 (total do dia)</span><input type="text" inputmode="decimal" id="fN99" placeholder="0,00"></label>
-            <label class="f"><span>Gorjeta</span><input type="text" inputmode="decimal" id="fGorj" placeholder="0,00"></label>
-          </div>
+                      </div>
           <label class="f"><span>Observação</span><textarea id="fObs" rows="1" placeholder="pausa, deslocamento, corrida antes do start…"></textarea></label>
           <div class="preview" id="preview"></div>
           <div class="actions">
@@ -381,7 +380,7 @@ function readDay(){
       trs.push({kmI:t.kmI||'',kmF:t.kmF||'',hI:t.hI||'',hF:t.hF||''})});
   }else{var k=num($('fKmTot').value),m=parseHM($('fMinTot').value);km=isNaN(k)?0:k;min=isNaN(m)?0:m;have=!isNaN(k)}
   var ajKm=nz($('fAjKm').value),ajMin=nz($('fAjMin').value);
-  return {data:date,km:Math.round((km+ajKm)*10)/10,min:Math.round(min+ajMin),uber:nz($('fUber').value),n99:nz($('fN99').value),gorjeta:nz($('fGorj').value),
+  return {data:date,km:Math.round((km+ajKm)*10)/10,min:Math.round(min+ajMin),uber:nz($('fUber').value),n99:nz($('fN99').value),gorjeta:0,
     obs:$('fObs').value.trim(),folga:false,modo:state.mode,trechos:trs,ajKm:ajKm,ajMin:ajMin,kmTot:$('fKmTot').value,minTot:$('fMinTot').value,_have:have};
 }
 function renderPreview(){
@@ -394,7 +393,7 @@ function renderPreview(){
 function setMode(m){state.mode=m;$('mTrechos').setAttribute('aria-pressed',m==='trechos');$('mTotais').setAttribute('aria-pressed',m==='totais');$('boxTrechos').hidden=m!=='trechos';$('boxTotais').hidden=m!=='totais';renderPreview()}
 function clearDay(keepDate){
   state.editing=null;state.trechos=[{}];
-  ['fKmTot','fMinTot','fAjKm','fAjMin','fUber','fN99','fGorj','fObs'].forEach(function(i){$(i).value=''});
+  ['fKmTot','fMinTot','fAjKm','fAjMin','fUber','fN99','fObs'].forEach(function(i){$(i).value=''});
   if(!keepDate)$('fDate').value=iso(new Date());
   $('editTag').textContent='novo lançamento';$('bDel').hidden=true;$('bDel').textContent='Excluir dia';
   renderTrechos();setMode('trechos');
@@ -402,7 +401,7 @@ function clearDay(keepDate){
 function loadDay(date){
   var r=state.days.find(function(x){return x.data===date});if(!r)return;
   clearDay(true);state.editing=date;$('fDate').value=date;
-  $('fUber').value=r.uber?String(r.uber).replace('.',','):'';$('fN99').value=r.n99?String(r.n99).replace('.',','):'';$('fGorj').value=r.gorjeta?String(r.gorjeta).replace('.',','):'';$('fObs').value=r.obs||'';
+  $('fUber').value=r.uber?String(r.uber).replace('.',','):'';$('fN99').value=r.n99?String(r.n99).replace('.',','):'';$('fObs').value=r.obs||'';
   if(r.modo==='trechos'&&r.trechos&&r.trechos.length){state.trechos=r.trechos.map(function(t){return {kmI:t.kmI,kmF:t.kmF,hI:t.hI,hF:t.hF}});renderTrechos();
     $('fAjKm').value=r.ajKm?String(r.ajKm).replace('.',','):'';$('fAjMin').value=r.ajMin?String(r.ajMin):'';setMode('trechos')}
   else{$('fKmTot').value=String(r.km||0).replace('.',',');$('fMinTot').value=r.min?Math.floor(r.min/60)+':'+String(r.min%60).padStart(2,'0'):'';setMode('totais')}
@@ -420,7 +419,7 @@ async function saveDay(folga){
   else{
     if(!(r.km>0)){say('msgDay','Informe os km (trechos ou totais).','err');return}
     if(r.min<=0&&state.mode==='trechos'){say('msgDay','Informe os horários dos trechos ou use o modo Totais.','err');return}
-    doc={data:r.data,km:r.km,min:r.min>0?r.min:null,uber:r.uber,n99:r.n99,gorjeta:r.gorjeta,obs:r.obs,folga:false,modo:r.modo,trechos:r.trechos,ajKm:r.ajKm,ajMin:r.ajMin};
+    doc={data:r.data,km:r.km,min:r.min>0?r.min:null,uber:r.uber,n99:r.n99,gorjeta:0,obs:r.obs,folga:false,modo:r.modo,trechos:r.trechos,ajKm:r.ajKm,ajMin:r.ajMin};
   }
   $('bSave').disabled=true;$('bFolga').disabled=true;
   try{await gs('saveDia',doc);await reload();say('msgDay',folga?'Folga salva.':'Dia salvo.','ok');if(!state.editing)clearDay(false)}
@@ -487,7 +486,7 @@ $('boxTrechos').addEventListener('input',function(e){var t=e.target,row=t.closes
 $('boxTrechos').addEventListener('click',function(e){
   if(e.target.id==='bAddT'){state.trechos.push({});renderTrechos();return}
   var rm=e.target.getAttribute&&e.target.getAttribute('data-rm');if(rm!=null&&rm!==''){state.trechos.splice(+rm,1);renderTrechos();renderPreview()}});
-['fDate','fKmTot','fMinTot','fAjKm','fAjMin','fUber','fN99','fGorj'].forEach(function(i){$(i).addEventListener('input',renderPreview)});
+['fDate','fKmTot','fMinTot','fAjKm','fAjMin','fUber','fN99'].forEach(function(i){$(i).addEventListener('input',renderPreview)});
 ['aDate','aKm','aLit','aTot','aDesc','aRod'].forEach(function(i){$(i).addEventListener('input',renderFuelPreview)});
 $('dayForm').addEventListener('submit',function(e){e.preventDefault();saveDay(false)});
 $('bFolga').addEventListener('click',function(){saveDay(true)});
