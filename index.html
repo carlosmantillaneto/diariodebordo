@@ -58,8 +58,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 @media (max-width:760px){.sign-in{grid-template-columns:1fr}}
 .sign .lbl{color:var(--muted)}
 .sign h2{margin:0;font-family:var(--f-num);font-weight:700;font-size:30px;line-height:1.05;text-transform:uppercase;letter-spacing:.03em}
-.big{font-family:var(--f-num);font-weight:700;font-size:clamp(64px,13vw,104px);line-height:.95;letter-spacing:-.005em;font-variant-numeric:tabular-nums;margin-top:6px}
-.big .cur{font-size:.38em;font-weight:600;margin-right:6px;vertical-align:.52em;color:var(--muted)}
+.big{font-family:var(--f-num);font-weight:500;font-size:clamp(38px,10.5vw,46px);line-height:1.05;letter-spacing:-.005em;font-variant-numeric:tabular-nums;margin-top:6px}
+.big .cur{font-size:.55em;font-weight:500;margin-right:4px;vertical-align:.18em;color:var(--muted)}
 .big.pos{color:var(--good)}.big.neg{color:var(--bad)}
 .chip{display:inline-flex;align-items:center;gap:7px;margin-top:12px;border:1.5px solid var(--good);color:var(--good);border-radius:999px;padding:3px 12px 3px 9px;font-family:var(--f-num);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.07em}
 .chip i{width:10px;height:10px;border-radius:50%;background:currentColor}
@@ -67,7 +67,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;align-content:start}
 .stat{padding:10px 12px 12px;border-top:1.5px solid var(--line)}
 .stat:nth-child(3n+2),.stat:nth-child(3n){border-left:1.5px solid var(--line)}
-.stat b{display:block;font-family:var(--f-num);font-weight:700;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat b{display:block;font-family:var(--f-num);font-weight:700;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
 @media (max-width:420px){.stat b{font-size:21px}.stat{padding:8px 6px}}
 
 /* painéis */
@@ -87,6 +87,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 
 .wnav{display:flex;align-items:center;gap:6px;min-width:0}
 .wnav .meta{white-space:nowrap}
+.warrow svg{display:block}
+#week>header,#month>header{border-bottom:0;padding-bottom:0;margin-bottom:8px}
 .warrow{width:36px;height:36px;border:1.5px solid var(--ink);background:transparent;border-radius:4px;font-family:var(--f-num);font-size:22px;line-height:1;font-weight:700;cursor:pointer;display:grid;place-items:center;padding:0}
 .warrow:hover{background:var(--ink);color:var(--bg)}
 .warrow[hidden]{display:none!important}
@@ -109,16 +111,15 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 
 
 .hrow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:2px}
-.hrow h2{margin:0;white-space:nowrap;font-size:clamp(22px,7.4vw,30px)}
-.hrow .sep{color:var(--muted);font-family:var(--f-num);font-size:22px}
-.hrow .hd{font-family:var(--f-num);font-weight:700;font-size:clamp(22px,7.4vw,30px);white-space:nowrap;line-height:1.05;letter-spacing:.03em}
+.hrow h2{margin:0;white-space:nowrap;font-size:clamp(20px,6vw,26px)}
+.hrow .hd{font-family:var(--f-num);font-weight:700;font-size:clamp(20px,6vw,26px);white-space:nowrap;line-height:1.05;letter-spacing:.03em}
 .gbig{margin:4px 0 16px}
-.gbig b{display:block;font-family:var(--f-num);font-weight:500;font-size:clamp(40px,11vw,52px);line-height:1.05;color:var(--good);font-variant-numeric:tabular-nums;white-space:nowrap}
+.gbig b{display:block;font-family:var(--f-num);font-weight:500;font-size:clamp(38px,10.5vw,46px);line-height:1.05;color:var(--good);font-variant-numeric:tabular-nums;white-space:nowrap}
 .kv2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1.5px solid var(--line)}
 .kv2>div{min-width:0;padding:12px 12px 14px;border-bottom:1.5px solid var(--line)}
 .kv2>div:nth-child(even){border-left:1.5px solid var(--line)}
 .kv2>div:nth-last-child(-n+2){border-bottom:0}
-.kv2 b{display:block;font-family:var(--f-num);font-weight:700;font-size:clamp(19px,5.6vw,30px);line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:2px}
+.kv2 b{display:block;font-family:var(--f-num);font-weight:700;font-size:clamp(19px,5.4vw,26px);line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:2px}
 .kv2 .lbl{font-size:12px}
 .wleg{flex-direction:column!important;flex-wrap:nowrap!important}
 
@@ -129,7 +130,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 @media (max-width:760px){.recs{grid-template-columns:1fr}.rec+.rec{border-left:0;border-top:1.5px solid var(--line)}}
 .rec .rh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .rec .rh .meta{font-size:14px}
-.rec .gv{display:block;font-family:var(--f-num);font-weight:500;font-size:clamp(34px,9vw,44px);line-height:1.05;color:var(--good);font-variant-numeric:tabular-nums;white-space:nowrap;margin:2px 0 4px}
+.rec .gv{display:block;font-family:var(--f-num);font-weight:500;font-size:clamp(38px,10.5vw,46px);line-height:1.05;color:var(--good);font-variant-numeric:tabular-nums;white-space:nowrap;margin:2px 0 4px}
 .rec .sub{font-family:var(--f-num);font-size:15px;letter-spacing:.04em;color:var(--muted)}
 .rec .tag{display:inline-block;margin-left:6px;border:1.5px solid var(--blue);color:var(--blue);border-radius:999px;padding:0 7px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;vertical-align:2px}
 
@@ -350,7 +351,7 @@ function renderHero(ch){
   var neg=c.saldo<-0.004;
   var mid=r.folga?stat('Km total','0')+stat('Tempo','—')+stat('Ganho','R$0,00')+stat('Custo fixo',brl(FIXO))+stat('Bruto',brl(c.bruto))+stat('Tipo','Folga'):
     stat('Km total',(r.km||0)+' km')+stat('Tempo',hm(r.min))+stat('Ganho',brl(c.ganho))+stat('R$/km','R$'+f2(c.rkm))+stat('R$/h',r.min?'R$'+f2(c.rh):'—')+stat('Bruto',brl(c.bruto));
-  el.innerHTML='<div class="sign-in"><div><div class="lbl" style="margin-bottom:6px">Último registro</div><div class="hrow"><h2>'+DOWL[d.getDay()]+'</h2><span class="sep">–</span><span class="hd">'+dm(r.data)+'</span></div>'+
+  el.innerHTML='<div class="sign-in"><div><div class="hrow"><h2>'+DOWL[d.getDay()]+'</h2><span class="hd">'+dm(r.data)+'</span></div>'+
     '<div class="lbl" style="margin-top:14px">Saldo do dia</div><div class="big'+(neg?' neg':' pos')+'"><span class="cur">R$</span>'+(neg?'-':'')+f2(Math.abs(c.saldo))+'</div>'+
     '<span class="chip'+(neg?' neg':'')+'"><i></i>'+(neg?'Prejuízo no dia':'Lucro no dia')+'</span></div>'+
     '<div class="stats">'+mid+'</div></div>';
@@ -387,8 +388,9 @@ function periodBody(a){
   return gbig('Ganho',a.ganho)+'<div class="kv2">'+cell('Bruto',brl(a.bruto))+cell('Líquido',brl(a.liq),a.liq<0?'negc':'pos')+cell('Km',a.km)+cell('Tempo',hm(a.min))+
     cell('~R$/km','R$'+f2(a.rkm))+cell('~R$/h','R$'+f2(a.rh))+cell('Uber',brl(a.uber))+cell('99',brl(a.n99))+'</div>';
 }
+var CHL='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',CHR='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function navHead(title,range,kind,canBack,canFwd){
-  return '<header><h3>'+title+'</h3><div class="wnav"><button type="button" class="warrow" data-'+kind+'="-1" aria-label="Anterior"'+(canBack?'':' hidden')+'>‹</button><span class="meta">'+range+'</span><button type="button" class="warrow" data-'+kind+'="1" aria-label="Próximo"'+(canFwd?'':' hidden')+'>›</button></div></header>';
+  return '<header><h3>'+title+'</h3><div class="wnav"><button type="button" class="warrow" data-'+kind+'="-1" aria-label="Anterior"'+(canBack?'':' hidden')+'>'+CHL+'</button><span class="meta">'+range+'</span><button type="button" class="warrow" data-'+kind+'="1" aria-label="Próximo"'+(canFwd?'':' hidden')+'>'+CHR+'</button></div></header>';
 }
 function metaInfo(ch){
   var w=state.days.filter(function(r){return r.km>0}).slice(-14),c=0;
