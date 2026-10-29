@@ -13,17 +13,17 @@
 :root{
   --bg:#E4E9EC; --surface:#FFFFFF; --surface2:#EFF3F5; --ink:#0F171C; --muted:#56656F; --line:#C7D1D7;
   --sign:#0A4C9E; --sign-ink:#FFFFFF; --sign-dim:#BFD3EE; --hazard:#F0A800; --on-hazard:#1B1400;
-  --good:#12804A; --bad:#C2362B; --field:#FFFFFF;
+  --good:#12804A; --bad:#C2362B; --blue:#1F62C9; --field:#FFFFFF;
   --f-num:'Barlow Condensed','Arial Narrow',system-ui,sans-serif; --f-body:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0B1013; --surface:#131B20; --surface2:#1A242A; --ink:#E7EEF1; --muted:#8D9CA6; --line:#29363E;
   --sign:#0E4691; --sign-ink:#FFFFFF; --sign-dim:#A9C3E6; --hazard:#F5B71A; --on-hazard:#1B1400;
-  --good:#3DBE82; --bad:#F0786C; --field:#0E1519; color-scheme:dark}}
+  --good:#3DBE82; --bad:#F0786C; --blue:#6EA2F2; --field:#0E1519; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0B1013; --surface:#131B20; --surface2:#1A242A; --ink:#E7EEF1; --muted:#8D9CA6; --line:#29363E;
   --sign:#0E4691; --sign-ink:#FFFFFF; --sign-dim:#A9C3E6; --hazard:#F5B71A; --on-hazard:#1B1400;
-  --good:#3DBE82; --bad:#F0786C; --field:#0E1519; color-scheme:dark}
+  --good:#3DBE82; --bad:#F0786C; --blue:#6EA2F2; --field:#0E1519; color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
 [hidden]{display:none!important}
@@ -52,21 +52,22 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 @media (max-width:860px){.c7,.c6,.c5{grid-column:span 12}}
 
 /* placa: último dia */
-.sign{background:var(--sign);color:var(--sign-ink);border-radius:14px;padding:6px}
-.sign-in{border:2.5px solid var(--sign-ink);border-radius:9px;padding:18px 20px 20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:20px 28px}
+.sign{background:var(--surface);color:var(--ink);border:1.5px solid var(--ink);border-radius:6px}
+.sign-in{padding:16px 18px 18px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:20px 28px}
 @media (max-width:760px){.sign-in{grid-template-columns:1fr}}
-.sign .lbl{color:var(--sign-dim)}
+.sign .lbl{color:var(--muted)}
 .sign h2{margin:2px 0 0;font-family:var(--f-num);font-weight:700;font-size:30px;line-height:1.05;text-transform:uppercase;letter-spacing:.03em}
 .big{font-family:var(--f-num);font-weight:700;font-size:clamp(64px,13vw,104px);line-height:.95;letter-spacing:-.005em;font-variant-numeric:tabular-nums;margin-top:6px}
-.big .cur{font-size:.38em;font-weight:600;margin-right:6px;vertical-align:.52em;color:var(--sign-dim)}
-.chip{display:inline-flex;align-items:center;gap:7px;margin-top:12px;border:1.5px solid var(--sign-ink);border-radius:999px;padding:3px 12px 3px 9px;font-family:var(--f-num);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.07em}
-.chip i{width:10px;height:10px;border-radius:50%;background:var(--hazard)}
-.chip.neg i{background:#FF8A7C}
+.big .cur{font-size:.38em;font-weight:600;margin-right:6px;vertical-align:.52em;color:var(--muted)}
+.big.pos{color:var(--good)}.big.neg{color:var(--bad)}
+.chip{display:inline-flex;align-items:center;gap:7px;margin-top:12px;border:1.5px solid var(--good);color:var(--good);border-radius:999px;padding:3px 12px 3px 9px;font-family:var(--f-num);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.07em}
+.chip i{width:10px;height:10px;border-radius:50%;background:currentColor}
+.chip.neg{border-color:var(--bad);color:var(--bad)}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;align-content:start}
-.stat{padding:10px 12px 12px;border-top:1.5px solid color-mix(in srgb,var(--sign-ink) 35%,transparent)}
-.stat:nth-child(3n+2),.stat:nth-child(3n){border-left:1.5px solid color-mix(in srgb,var(--sign-ink) 35%,transparent)}
+.stat{padding:10px 12px 12px;border-top:1.5px solid var(--line)}
+.stat:nth-child(3n+2),.stat:nth-child(3n){border-left:1.5px solid var(--line)}
 .stat b{display:block;font-family:var(--f-num);font-weight:700;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
-@media (max-width:420px){.stat b{font-size:24px}.stat{padding:8px}}
+@media (max-width:420px){.stat b{font-size:21px}.stat{padding:8px 6px}}
 
 /* painéis */
 .panel{background:var(--surface);border:1.5px solid var(--ink);border-radius:6px;padding:16px 18px 18px;min-width:0}
@@ -81,6 +82,30 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .bars{margin-top:16px}
 .bars svg{display:block;width:100%;height:auto;overflow:visible}
 .bars .cap{display:flex;justify-content:space-between;font-family:var(--f-num);font-size:13px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+
+
+.wnav{display:flex;align-items:center;gap:6px;min-width:0}
+.wnav .meta{white-space:nowrap}
+.warrow{width:36px;height:36px;border:1.5px solid var(--ink);background:transparent;border-radius:4px;font-family:var(--f-num);font-size:22px;line-height:1;font-weight:700;cursor:pointer;display:grid;place-items:center;padding:0}
+.warrow:hover{background:var(--ink);color:var(--bg)}
+.warrow[hidden]{display:none!important}
+.wchart{position:relative;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:6px}
+.wbar{border:0;background:transparent;padding:0;cursor:pointer;display:grid;grid-template-rows:132px 40px;min-width:0;border-radius:4px;text-align:center}
+.wbar[aria-pressed=true]{background:var(--surface2);box-shadow:0 0 0 2px var(--ink)}
+.wbar.ghost{cursor:default}
+.wcol{position:relative;display:block}
+.wcol i{position:absolute;left:14%;right:14%;bottom:0;border-radius:3px 3px 0 0;display:block}
+.wcol i.ok{background:var(--good)}.wcol i.bad{background:var(--bad)}
+.wcol i.ghost{background:color-mix(in srgb,var(--blue) 20%,transparent);border:1.5px dashed var(--blue);border-bottom:0}
+.wcol i.off,.wcol i.none{background:var(--line);height:3px!important;border-radius:0}
+.wv{position:absolute;left:0;right:0;font-family:var(--f-num);font-size:13px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
+.wv.g{color:var(--blue)}
+.wl{display:block;font-family:var(--f-num);font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);line-height:1.15;padding-top:6px}
+.wmeta{position:absolute;left:0;right:0;border-top:2px dashed var(--blue);pointer-events:none;z-index:1}
+.wmeta span{position:absolute;right:0;top:-18px;font-family:var(--f-num);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--blue);background:var(--surface);padding:0 4px}
+.wleg{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:8px;font-family:var(--f-num);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.wleg b{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
+.wobs{margin:10px 0 0;font-size:13px;color:var(--muted)}
 
 /* formulários */
 form{display:grid;gap:14px}
@@ -225,6 +250,7 @@ textarea{resize:vertical;min-height:44px}
       <article class="panel">
         <header><h3>Combustível</h3><span class="meta" id="fuelMeta"></span></header>
         <div id="fuelList"></div>
+        <div class="actions" style="margin-top:10px"><button class="btn small" type="button" id="bNewFuel">+ Novo abastecimento</button></div>
         <p class="note" style="margin-top:10px">Preço do litro e autonomia usam a média entre o ciclo anterior e o novo, valendo a partir da data de cada abastecimento.</p>
       </article>
     </section>
@@ -240,7 +266,7 @@ var FIXO=(1844.84+553.65+349.15+500)/30, DEF_PRICE=3.6, DEF_AUT=8;
 var $=function(id){return document.getElementById(id)};
 var DOW=['dom','seg','ter','qua','qui','sex','sáb'], DOWL=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 var MON=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'], MONL=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-var state={days:[],fuel:[],db:null,editing:null,editingFuel:null,showAll:false,mode:'trechos',trechos:[{}],ready:false};
+var state={weekOff:0,sel:null,days:[],fuel:[],db:null,editing:null,editingFuel:null,showAll:false,mode:'trechos',trechos:[{}],ready:false};
 
 /* ---------- utilidades ---------- */
 function pd(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2])}
@@ -290,14 +316,14 @@ function agg(days,ch,lo,hi){
 function stat(l,v,cls){return '<div class="stat"><span class="lbl">'+l+'</span><b'+(cls?' class="'+cls+'"':'')+'>'+v+'</b></div>'}
 function renderHero(ch){
   var el=$('hero');
-  if(!state.days.length){el.innerHTML='<div class="sign-in"><div><div class="lbl">Último dia lançado</div><h2>Nenhum dia ainda</h2><p style="margin:8px 0 0;color:var(--sign-dim)">Lance o primeiro dia em “Lançar o dia”. Os números aparecem aqui.</p></div></div>';return}
+  if(!state.days.length){el.innerHTML='<div class="sign-in"><div><div class="lbl">Último dia lançado</div><h2>Nenhum dia ainda</h2><p style="margin:8px 0 0;color:var(--muted)">Lance o primeiro dia em “Lançar o dia”. Os números aparecem aqui.</p></div></div>';return}
   var r=state.days[state.days.length-1],c=calc(r,ch),d=pd(r.data);
   var neg=c.saldo<-0.004;
   var mid=r.folga?stat('Km','0')+stat('Tempo','—')+stat('Ganho','R$0,00')+stat('Custo fixo',brl(FIXO))+stat('Bruto',brl(c.bruto))+stat('Tipo','Folga'):
     stat('Km',(r.km||0)+' km')+stat('Tempo',hm(r.min))+stat('Ganho',brl(c.ganho))+stat('R$/km','R$'+f2(c.rkm))+stat('R$/h',r.min?'R$'+f2(c.rh):'—')+stat('Bruto',brl(c.bruto));
   el.innerHTML='<div class="sign-in"><div><div class="lbl">Último dia lançado</div><h2>'+DOWL[d.getDay()]+'<br>'+dm(r.data)+'</h2>'+
-    '<div class="lbl" style="margin-top:14px">Saldo do dia</div><div class="big"><span class="cur">R$</span>'+(neg?'-':'')+f2(Math.abs(c.saldo))+'</div>'+
-    '<span class="chip'+(neg?' neg':'')+'"><i></i>'+(neg?'Fechou no vermelho':'Fechou no azul do caixa')+'</span></div>'+
+    '<div class="lbl" style="margin-top:14px">Saldo do dia</div><div class="big'+(neg?' neg':' pos')+'"><span class="cur">R$</span>'+(neg?'-':'')+f2(Math.abs(c.saldo))+'</div>'+
+    '<span class="chip'+(neg?' neg':'')+'"><i></i>'+(neg?'Prejuízo no dia':'Lucro no dia')+'</span></div>'+
     '<div class="stats">'+mid+'</div></div>';
 }
 function bars(slots,labels){
@@ -324,6 +350,66 @@ function renderPeriod(id,title,range,lo,hi,slots,labels,ch){
    '<div><span class="lbl">Bruto</span><b>'+brl(a.bruto)+'</b></div><div><span class="lbl">Uber</span><b>'+brl(a.uber)+'</b></div><div><span class="lbl">99</span><b>'+brl(a.n99)+'</b></div></div>'+
    '<div class="bars"><div class="cap"><span>Saldo por dia</span><span>média diária '+brl(a.ganho/a.dias)+' de ganho</span></div>'+bars(slots,labels)+'</div>';
 }
+
+function metaInfo(ch){
+  var w=state.days.filter(function(r){return r.km>0}).slice(-14),c=0;
+  w.forEach(function(r){c+=calc(r,ch).comb});
+  var avg=w.length?c/w.length:0;return {comb:avg,meta:FIXO+avg};
+}
+function renderWeek(ch){
+  var el=$('week');
+  var f=mondayOf(pd(state.days[0].data)),last=state.days[state.days.length-1],l=mondayOf(pd(last.data));
+  var maxBack=Math.round((l-f)/604800000);
+  if(state.weekOff>0)state.weekOff=0;
+  if(state.weekOff<-maxBack)state.weekOff=-maxBack;
+  var mo=addDays(l,state.weekOff*7),su=addDays(mo,6),smo=iso(mo),ssu=iso(su);
+  var a=agg(state.days,ch,mo,su),mi=metaInfo(ch);
+  var byDate={};state.days.forEach(function(r){byDate[r.data]=r});
+  if(state.sel&&!(byDate[state.sel]&&state.sel>=smo&&state.sel<=ssu))state.sel=null;
+  var latest=state.weekOff===0,today=iso(new Date());
+  var gmax=mi.meta;
+  for(var i=0;i<7;i++){var rr=byDate[iso(addDays(mo,i))];if(rr)gmax=Math.max(gmax,calc(rr,ch).ganho)}
+  var scale=gmax*1.18,H=132,wl=['seg','ter','qua','qui','sex','sáb','dom'],bars='';
+  for(var j=0;j<7;j++){
+    var dt=addDays(mo,j),k=iso(dt),r=byDate[k],lab=wl[j]+'<br>'+String(dt.getDate()).padStart(2,'0'),ph,cls,val='',vcls='',attrs='';
+    if(r&&!r.folga){var c=calc(r,ch);ph=c.ganho/scale;cls=c.saldo>=0?'ok':'bad';val=String(Math.round(c.ganho));attrs=' data-d="'+k+'"'}
+    else if(r&&r.folga){ph=0;cls='off';val='folga';attrs=' data-d="'+k+'"'}
+    else if(latest&&k>last.data&&k>=today){ph=mi.meta/scale;cls='ghost'}
+    else if(latest&&k>last.data){ph=mi.meta/scale;cls='ghost'}
+    else{ph=0;cls='none'}
+    bars+='<button type="button" class="wbar'+(cls==='ghost'?' ghost':'')+'"'+attrs+(state.sel===k?' aria-pressed="true"':' aria-pressed="false"')+(cls==='ghost'||cls==='none'?' tabindex="-1" aria-disabled="true"':'')+' aria-label="'+lab.replace('<br>',' ')+(val?' '+val:'')+'">'+
+      '<span class="wcol"><i class="'+cls+'" style="height:'+(ph*H).toFixed(1)+'px"></i>'+(val?'<span class="wv'+vcls+'" style="bottom:'+((ph*H)+(cls==='off'?6:4)).toFixed(1)+'px">'+val+'</span>':'')+'</span><span class="wl">'+lab+'</span></button>';
+  }
+  var metaBottom=(40+(mi.meta/scale)*H).toFixed(1);
+  var chart='<div class="wchart">'+bars+'<div class="wmeta" style="bottom:'+metaBottom+'px"><span>meta R$'+f2(mi.meta)+'</span></div></div>'+
+    '<div class="wleg"><span><b style="background:var(--good)"></b>lucro</span><span><b style="background:var(--bad)"></b>abaixo do custo</span><span><b style="border:1.5px dashed var(--blue);background:color-mix(in srgb,var(--blue) 20%,transparent)"></b>meta: custo fixo R$'+f2(FIXO)+' + combustível médio R$'+f2(mi.comb)+'</span></div>';
+  var head,body;
+  if(state.sel){
+    var d=byDate[state.sel],c2=calc(d,ch),dd=pd(d.data);
+    head=DOW[dd.getDay()]+' '+dm(d.data)+' · dia';
+    if(d.folga)body='<div class="kv"><div class="main"><span class="lbl">Saldo</span><b class="negc">'+brl(c2.saldo)+'</b></div><div><span class="lbl">Custo fixo</span><b>'+brl(FIXO)+'</b></div></div><p class="wobs">Folga: só o custo fixo do dia.</p>';
+    else body='<div class="kv"><div class="main"><span class="lbl">R$/km</span><b>R$'+f2(c2.rkm)+'</b></div><div class="main"><span class="lbl">R$/h</span><b>'+(d.min?'R$'+f2(c2.rh):'—')+'</b></div>'+
+      '<div class="main"><span class="lbl">Saldo</span><b class="'+(c2.saldo<0?'negc':'pos')+'">'+brl(c2.saldo)+'</b></div>'+
+      '<div><span class="lbl">Km</span><b>'+(d.km||0)+'</b></div><div><span class="lbl">Tempo</span><b>'+hm(d.min)+'</b></div><div><span class="lbl">Ganho</span><b>'+brl(c2.ganho)+'</b></div>'+
+      '<div><span class="lbl">Combustível</span><b>'+brl(c2.comb)+'</b></div><div><span class="lbl">Uber</span><b>'+brl(d.uber||0)+'</b></div><div><span class="lbl">99</span><b>'+brl(d.n99||0)+'</b></div></div>'+(d.obs?'<p class="wobs">'+esc(d.obs)+'</p>':'');
+  }else{
+    head=a.dias+(a.dias===1?' dia':' dias');
+    body=a.dias?'<div class="kv"><div class="main"><span class="lbl">~R$/km</span><b>R$'+f2(a.rkm)+'</b></div><div class="main"><span class="lbl">~R$/h</span><b>R$'+f2(a.rh)+'</b></div>'+
+      '<div class="main"><span class="lbl">Líquido</span><b class="'+(a.liq<0?'negc':'pos')+'">'+brl(a.liq)+'</b></div>'+
+      '<div><span class="lbl">Km</span><b>'+a.km+'</b></div><div><span class="lbl">Tempo</span><b>'+hm(a.min)+'</b></div><div><span class="lbl">Ganho</span><b>'+brl(a.ganho)+'</b></div>'+
+      '<div><span class="lbl">Bruto</span><b>'+brl(a.bruto)+'</b></div><div><span class="lbl">Uber</span><b>'+brl(a.uber)+'</b></div><div><span class="lbl">99</span><b>'+brl(a.n99)+'</b></div></div>':'<div class="empty">Sem dias lançados nesta semana.</div>';
+  }
+  el.innerHTML='<header><h3>Semana</h3><div class="wnav"><button type="button" class="warrow" data-w="-1" aria-label="Semana anterior"'+(state.weekOff<=-maxBack?' hidden':'')+'>‹</button><span class="meta">'+dm(smo)+' a '+dm(ssu)+' · '+head+'</span><button type="button" class="warrow" data-w="1" aria-label="Próxima semana"'+(state.weekOff>=0?' hidden':'')+'>›</button></div></header>'+body+
+    '<div class="bars"><div class="cap"><span>Ganho por dia</span><span>'+(state.sel?'toque fora para voltar':'toque numa barra')+'</span></div>'+chart+'</div>';
+}
+document.addEventListener('click',function(e){
+  var t=e.target;if(!t||!t.closest||!state.days.length)return;
+  var arrow=t.closest('.warrow');
+  if(arrow){state.weekOff+=+arrow.getAttribute('data-w');state.sel=null;renderWeek(chains(state.fuel));return}
+  var bar=t.closest('.wbar');
+  if(bar&&bar.getAttribute('data-d')){state.sel=bar.getAttribute('data-d');renderWeek(chains(state.fuel));return}
+  if(state.sel&&!t.closest('#week header')){state.sel=null;renderWeek(chains(state.fuel))}
+});
 function renderPeriods(ch){
   if(!state.days.length){['week','month'].forEach(function(i){$(i).innerHTML='<header><h3>'+(i==='week'?'Semana':'Mês')+'</h3></header><div class="empty">Os números aparecem depois do primeiro lançamento.</div>'});return}
   var ref=pd(state.days[state.days.length-1].data);
@@ -331,7 +417,7 @@ function renderPeriods(ch){
   var byDate={};state.days.forEach(function(r){byDate[r.data]=calc(r,ch).saldo});
   var slots=[],labels=[];var wl=['S','T','Q','Q','S','S','D'];
   for(var i=0;i<7;i++){var k=iso(addDays(mo,i));slots.push({v:byDate[k]==null?null:byDate[k]});labels.push(wl[i])}
-  renderPeriod('week','Semana',dm(iso(mo))+' a '+dm(iso(su)),mo,su,slots,labels,ch);
+  renderWeek(ch);
   var f=new Date(ref.getFullYear(),ref.getMonth(),1),l=new Date(ref.getFullYear(),ref.getMonth()+1,0);
   var ms=[],ml=[];for(var d=1;d<=l.getDate();d++){var kk=iso(new Date(ref.getFullYear(),ref.getMonth(),d));ms.push({v:byDate[kk]==null?null:byDate[kk]});ml.push(d===1||d%5===0?String(d):'')}
   renderPeriod('month',MONL[ref.getMonth()],'01/'+String(ref.getMonth()+1).padStart(2,'0')+' a '+dm(iso(l)),f,l,ms,ml,ch);
@@ -495,6 +581,7 @@ $('bDel').addEventListener('click',delDay);
 $('fuelForm').addEventListener('submit',function(e){e.preventDefault();saveFuel()});
 $('hist').addEventListener('click',function(e){var b=e.target.closest('[data-edit]');if(b)loadDay(b.getAttribute('data-edit'))});
 $('fuelList').addEventListener('click',function(e){var b=e.target.closest('[data-fedit]');if(b)loadFuel(b.getAttribute('data-fedit'))});
+$('bNewFuel').addEventListener('click',function(){clearFuel();say('msgFuel','');goTo('abastecer')});
 $('bMore').addEventListener('click',function(){state.showAll=!state.showAll;renderAll()});
 
 /* ---------- início ---------- */
@@ -511,7 +598,7 @@ async function gs(fn,arg){
   return j.data;
 }
 function askToken(msg){
-  $('hero').innerHTML='<div class="sign-in"><div><div class="lbl">Acesso</div><h2>Chave do diário</h2><p style="margin:8px 0 0;color:var(--sign-dim)">'+esc(msg||'Digite a chave definida no Code.gs. Ela fica salva só neste aparelho.')+'</p></div>'+
+  $('hero').innerHTML='<div class="sign-in"><div><div class="lbl">Acesso</div><h2>Chave do diário</h2><p style="margin:8px 0 0;color:var(--muted)">'+esc(msg||'Digite a chave definida no Code.gs. Ela fica salva só neste aparelho.')+'</p></div>'+
    '<div style="display:grid;gap:10px;align-content:center"><input type="password" id="tk" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="chave"><button class="btn primary" type="button" id="tkGo">Entrar</button></div></div>';
   return new Promise(function(res){
     function go(){TOKEN=$('tk').value.trim();try{localStorage.setItem('diario-chave',TOKEN)}catch(e){}res()}
@@ -522,8 +609,8 @@ async function reload(){
   state.days=d.dias;state.fuel=d.abastecimentos;state.db=true;state.ready=true;renderAll();
 }
 function showFail(msg){
-  $('hero').innerHTML='<div class="sign-in"><div><div class="lbl">Sem conexão com a planilha</div><h2>Não consegui carregar</h2><p style="margin:8px 0 0;color:var(--sign-dim)">'+esc(msg)+'</p></div>'+
-   '<div style="display:grid;gap:10px;align-content:center"><button class="btn primary" type="button" id="fRetry">Tentar de novo</button><button class="btn" type="button" id="fKey" style="color:var(--sign-ink);border-color:var(--sign-ink)">Trocar chave</button></div></div>';
+  $('hero').innerHTML='<div class="sign-in"><div><div class="lbl">Sem conexão com a planilha</div><h2>Não consegui carregar</h2><p style="margin:8px 0 0;color:var(--muted)">'+esc(msg)+'</p></div>'+
+   '<div style="display:grid;gap:10px;align-content:center"><button class="btn primary" type="button" id="fRetry">Tentar de novo</button><button class="btn" type="button" id="fKey" >Trocar chave</button></div></div>';
   return new Promise(function(res){$('fRetry').onclick=function(){res('retry')};$('fKey').onclick=function(){res('key')}});
 }
 (async function(){
