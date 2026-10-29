@@ -89,7 +89,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .wnav .meta{white-space:nowrap}
 .warrow svg{display:block}
 #week>header,#month>header{border-bottom:0;padding-bottom:0;margin-bottom:8px}
-.warrow{width:36px;height:36px;border:1.5px solid var(--ink);background:transparent;border-radius:4px;font-family:var(--f-num);font-size:22px;line-height:1;font-weight:700;cursor:pointer;display:grid;place-items:center;padding:0}
+.warrow{width:28px;height:28px;border:1.5px solid var(--ink);background:transparent;border-radius:4px;font-family:var(--f-num);font-size:22px;line-height:1;font-weight:700;cursor:pointer;display:grid;place-items:center;padding:0}
 .warrow:hover{background:var(--ink);color:var(--bg)}
 .warrow[hidden]{display:none!important}
 .wchart{position:relative;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:6px}
@@ -134,6 +134,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .rec .sub{font-family:var(--f-num);font-size:15px;letter-spacing:.04em;color:var(--muted)}
 .rec .tag{display:inline-block;margin-left:6px;border:1.5px solid var(--blue);color:var(--blue);border-radius:999px;padding:0 7px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;vertical-align:2px}
 
+
+.lockwrap{display:none}
+body.locked{background:var(--surface)}
+body.locked .wrap{display:none}
+body.locked .lockwrap{display:grid;place-items:center;min-height:100vh;padding-block:24px}
+.lockcard{width:min(380px,100%);border:1.5px solid var(--ink);border-radius:6px;padding:24px 22px 20px;display:grid;gap:14px;background:var(--surface)}
+.lockcard h1{margin:0;font-family:var(--f-num);font-weight:700;font-size:26px;text-transform:uppercase;letter-spacing:.04em;line-height:1}
+.lockcard p{margin:0;color:var(--muted)}
 /* formulários */
 form{display:grid;gap:14px}
 .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -183,7 +191,8 @@ textarea{resize:vertical;min-height:44px}
 @media (prefers-reduced-motion:no-preference){.sign{transition:transform .2s}}
 </style>
 </head>
-<body>
+<body class="locked">
+<div class="lockwrap"><form class="lockcard" id="lockForm" autocomplete="off"><h1>Diário de Bordo</h1><p>Digite a chave para entrar.</p><input type="password" id="tk" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="chave"><button class="btn primary" type="submit" id="tkGo">Entrar</button><div class="msg" id="lockMsg" role="status"></div></form></div>
 <div class="wrap">
   <div class="top">
     <div class="brand">Diário de Bordo<small>Uber · 99</small></div>
@@ -388,7 +397,7 @@ function periodBody(a){
   return gbig('Ganho',a.ganho)+'<div class="kv2">'+cell('Bruto',brl(a.bruto))+cell('Líquido',brl(a.liq),a.liq<0?'negc':'pos')+cell('Km',a.km)+cell('Tempo',hm(a.min))+
     cell('~R$/km','R$'+f2(a.rkm))+cell('~R$/h','R$'+f2(a.rh))+cell('Uber',brl(a.uber))+cell('99',brl(a.n99))+'</div>';
 }
-var CHL='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',CHR='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var CHL='<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',CHR='<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function navHead(title,range,kind,canBack,canFwd){
   return '<header><h3>'+title+'</h3><div class="wnav"><button type="button" class="warrow" data-'+kind+'="-1" aria-label="Anterior"'+(canBack?'':' hidden')+'>'+CHL+'</button><span class="meta">'+range+'</span><button type="button" class="warrow" data-'+kind+'="1" aria-label="Próximo"'+(canFwd?'':' hidden')+'>'+CHR+'</button></div></header>';
 }
@@ -646,44 +655,51 @@ $('bMore').addEventListener('click',function(){state.showAll=!state.showAll;rend
 /* ---------- início ---------- */
 clearDay(false);clearFuel();renderAll();
 var APP_URL='https://script.google.com/macros/s/AKfycbxee3IIS5lZ3QEB8YugPmACb7UwuuS5hTRi3dap9JIduvZqb-U3Lm1rYRCVRnw6dmnFtg/exec'; // <- linha para colar o link do Web App (termina em /exec)
-var TOKEN='';try{TOKEN=localStorage.getItem('diario-chave')||''}catch(e){}
+var TOKEN='',EXP=0,SESSION_MS=10*60*1000;
+function loadSession(){
+  try{var o=JSON.parse(localStorage.getItem('diario-sessao')||'null');if(o&&o.t&&o.exp>Date.now()){TOKEN=o.t;EXP=o.exp;return true}}catch(e){}
+  TOKEN='';EXP=0;return false;
+}
+function saveSession(){try{localStorage.setItem('diario-sessao',JSON.stringify({t:TOKEN,exp:EXP}))}catch(e){}}
+function clearSession(){TOKEN='';EXP=0;try{localStorage.removeItem('diario-sessao');localStorage.removeItem('diario-chave')}catch(e){}}
+function showLock(msg,ok){
+  document.body.classList.add('locked');
+  var m=$('lockMsg');m.textContent=msg||'';m.className='msg'+(msg&&!ok?' err':'');
+  $('tkGo').disabled=false;$('tk').value='';
+  try{$('tk').focus()}catch(e){}
+}
+function hideLock(){document.body.classList.remove('locked')}
 async function gs(fn,arg){
   if(APP_URL.indexOf('https://')!==0)throw new Error('cole o link do Apps Script na linha APP_URL do index.html');
   var r;
   if(fn==='getData')r=await fetch(APP_URL+'?action=getData&token='+encodeURIComponent(TOKEN));
   else r=await fetch(APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({token:TOKEN,action:fn,payload:arg})});
   var j=await r.json();
-  if(!j.ok){var e=new Error(j.error||'erro');e.auth=(j.error==='chave inválida');throw e}
+  if(!j.ok){var e=new Error(j.error||'erro');e.auth=(j.error==='chave inválida');if(e.auth){clearSession();showLock('Chave incorreta.')}throw e}
   return j.data;
-}
-function askToken(msg){
-  $('hero').innerHTML='<div class="sign-in"><div><div class="lbl">Acesso</div><h2>Chave do diário</h2><p style="margin:8px 0 0;color:var(--muted)">'+esc(msg||'Digite a chave definida no Code.gs. Ela fica salva só neste aparelho.')+'</p></div>'+
-   '<div style="display:grid;gap:10px;align-content:center"><input type="password" id="tk" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="chave"><button class="btn primary" type="button" id="tkGo">Entrar</button></div></div>';
-  return new Promise(function(res){
-    function go(){TOKEN=$('tk').value.trim();try{localStorage.setItem('diario-chave',TOKEN)}catch(e){}res()}
-    $('tkGo').onclick=go;$('tk').onkeydown=function(e){if(e.key==='Enter')go()};$('tk').focus()});
 }
 async function reload(){
   var d=JSON.parse(await gs('getData'));
   state.days=d.dias;state.fuel=d.abastecimentos;state.db=true;state.ready=true;renderAll();
 }
-function showFail(msg){
-  $('hero').innerHTML='<div class="sign-in"><div><div class="lbl">Sem conexão com a planilha</div><h2>Não consegui carregar</h2><p style="margin:8px 0 0;color:var(--muted)">'+esc(msg)+'</p></div>'+
-   '<div style="display:grid;gap:10px;align-content:center"><button class="btn primary" type="button" id="fRetry">Tentar de novo</button><button class="btn" type="button" id="fKey" >Trocar chave</button></div></div>';
-  return new Promise(function(res){$('fRetry').onclick=function(){res('retry')};$('fKey').onclick=function(){res('key')}});
+function checkExpiry(){
+  if(EXP&&Date.now()>=EXP&&!document.body.classList.contains('locked')){clearSession();showLock('Sessão expirada. Digite a chave de novo.')}
 }
+$('lockForm').addEventListener('submit',async function(e){
+  e.preventDefault();
+  var v=$('tk').value.trim();if(!v){showLock('Digite a chave.');return}
+  $('tkGo').disabled=true;var m=$('lockMsg');m.textContent='Verificando…';m.className='msg';
+  TOKEN=v;
+  try{await reload();EXP=Date.now()+SESSION_MS;saveSession();hideLock();$('dbState').textContent='Dados salvos na sua planilha do Google'}
+  catch(err){if(!(err&&err.auth)){TOKEN='';showLock('Não consegui conectar: '+((err&&err.message)||'erro')+'. Confira o link do Apps Script e se a implantação está como "Qualquer pessoa".')}}
+});
+setInterval(checkExpiry,5000);
+document.addEventListener('visibilitychange',checkExpiry);
 (async function(){
-  if(!TOKEN)await askToken();
-  for(var t=0;t<30;t++){
-    try{await reload();$('dbState').textContent='Dados salvos na sua planilha do Google';return}
-    catch(e){
-      if(e&&e.auth){TOKEN='';try{localStorage.removeItem('diario-chave')}catch(x){}await askToken('Chave incorreta. Tente de novo.');continue}
-      var m=(e&&e.message)||'erro';
-      $('dbState').textContent='Falha: '+m;
-      var c=await showFail('Erro: '+m+'. Confira se a implantação está como "Qualquer pessoa" e se o APP_URL termina em /exec.');
-      if(c==='key'){TOKEN='';try{localStorage.removeItem('diario-chave')}catch(x){}await askToken('Digite a chave de novo.')}
-    }
-  }
+  if(loadSession()){
+    try{await reload();hideLock();$('dbState').textContent='Dados salvos na sua planilha do Google';return}
+    catch(e){if(!(e&&e.auth))showLock('Não consegui conectar: '+((e&&e.message)||'erro'))}
+  }else showLock('')
 })();
 })();
 </script>
