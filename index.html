@@ -91,7 +91,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 #week>header,#month>header{border-bottom:0;padding-bottom:0;margin-bottom:8px}
 .warrow{width:28px;height:28px;border:1.5px solid var(--ink);background:transparent;border-radius:4px;font-family:var(--f-num);font-size:22px;line-height:1;font-weight:700;cursor:pointer;display:grid;place-items:center;padding:0}
 .warrow:hover{background:var(--ink);color:var(--bg)}
-.warrow[hidden]{display:none!important}
+.warrow[hidden]{display:grid!important;visibility:hidden;pointer-events:none}
 .wchart{position:relative;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:6px}
 .wbar{border:0;background:transparent;padding:0;cursor:pointer;display:grid;grid-template-rows:132px 40px;min-width:0;border-radius:4px;text-align:center}
 .wbar[aria-pressed=true]{background:var(--surface2);box-shadow:0 0 0 2px var(--ink)}
@@ -152,7 +152,7 @@ label.f span{font-family:var(--f-num);text-transform:uppercase;letter-spacing:.0
 input[type=text],input[type=password],input[type=date],input[type=time],textarea{width:100%;min-width:0;background:var(--field);border:1.5px solid var(--line);border-radius:4px;padding:10px 11px;font-size:17px;color:var(--ink)}
 input::placeholder,textarea::placeholder{color:var(--muted);opacity:.8}
 input:focus,textarea:focus{border-color:var(--ink)}
-textarea{resize:vertical;min-height:44px}
+textarea{resize:none;min-height:44px}
 .seg{display:inline-flex;border:1.5px solid var(--ink);border-radius:4px;overflow:hidden;width:max-content}
 .seg button{border:0;background:transparent;padding:6px 14px;font-family:var(--f-num);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.07em;cursor:pointer}
 .seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
@@ -199,7 +199,7 @@ textarea{resize:vertical;min-height:44px}
 #lancar .panel>header{align-items:center}
 #lancar .panel>header .meta{font-size:14px}
 input[type=text],input[type=password],input[type=date],input[type=time],textarea{height:44px;line-height:1.2;padding:0 11px;display:block;font-family:var(--f-body)}
-textarea{height:auto;min-height:44px;padding:10px 11px;resize:vertical}
+textarea{height:44px;min-height:44px;padding:10px 11px;resize:none;overflow:hidden;line-height:1.3}
 input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;text-align:left}
 input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and-time-value{text-align:left;min-height:1.2em}
 input::-webkit-calendar-picker-indicator{opacity:.85;cursor:pointer;width:18px;height:18px;padding:0;margin:0}
@@ -261,7 +261,7 @@ input::-webkit-calendar-picker-indicator{opacity:.85;cursor:pointer;width:18px;h
             <label class="f"><span>Uber (total do dia)</span><input type="text" inputmode="decimal" id="fUber" placeholder="0,00"></label>
             <label class="f"><span>99 (total do dia)</span><input type="text" inputmode="decimal" id="fN99" placeholder="0,00"></label>
           </div>
-          <label class="f"><span>Observação</span><textarea id="fObs" rows="1" placeholder="pausa, deslocamento, corrida antes do start…"></textarea></label>
+          <label class="f"><span>Observação</span><textarea id="fObs" rows="1"></textarea></label>
           <div class="preview" id="preview"></div>
           <div class="actions three">
             <button class="btn primary" type="submit" id="bSave">Salvar dia</button>
@@ -291,7 +291,7 @@ input::-webkit-calendar-picker-indicator{opacity:.85;cursor:pointer;width:18px;h
             <label class="f"><span>Rodou pelo painel (opcional)</span><input type="text" inputmode="decimal" id="aRod" placeholder="km"></label>
           </div>
           <div class="preview" id="fuelPreview"></div>
-          <label class="f"><span>Observação</span><textarea id="aObs" rows="1" placeholder="posto, forma de pagamento…"></textarea></label>
+          <label class="f"><span>Observação</span><textarea id="aObs" rows="1"></textarea></label>
           <div class="actions">
             <button class="btn primary" type="submit" id="bFuel">Salvar abastecimento</button>
             <span class="msg" id="msgFuel" role="status"></span>
@@ -506,7 +506,7 @@ function renderRecords(ch){
   var ds=(bestD.r.km||0)+' km · '+hm(bestD.r.min)+' · Saldo '+brl(bestD.s);
   var ws=bestW.a.dias+' dias · '+bestW.a.km+' km · Líquido '+brl(bestW.a.liq);
   var ms=bestM.a.dias+' dias · '+bestM.a.km+' km · Líquido '+brl(bestM.a.liq);
-  el.innerHTML='<header><h3>Recordes</h3><span class="meta">maior arrecadação</span></header><div class="recs">'+
+  el.innerHTML='<header><h3>Recordes</h3></header><div class="recs">'+
     blk('Melhor dia',DOW[dd.getDay()]+' '+dm(bestD.r.data),bestD.g,ds,false)+
     blk('Melhor semana',dm(iso(bestW.lo))+' a '+dm(iso(bestW.hi)),bestW.a.ganho,ws,iso(bestW.hi)>lastDate)+
     blk('Melhor mês',MONL[bestM.lo.getMonth()],bestM.a.ganho,ms,iso(bestM.hi)>lastDate)+'</div>';
