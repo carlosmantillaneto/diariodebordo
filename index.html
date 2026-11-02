@@ -384,7 +384,7 @@ function renderHero(ch){
   var r=state.days[state.days.length-1],c=calc(r,ch),d=pd(r.data);
   var neg=c.saldo<-0.004;
   var mid=r.folga?stat('Km total','0')+stat('Tempo','—')+stat('Ganho','R$0,00')+stat('Custo fixo',brl(FIXO))+stat('Bruto',brl(c.bruto))+stat('Tipo','Folga'):
-    stat('Km total',(r.km||0)+' km')+stat('Tempo',hm(r.min))+stat('Ganho',brl(c.ganho))+stat('R$/km','R$'+f2(c.rkm))+stat('R$/h',r.min?'R$'+f2(c.rh):'—')+stat('Bruto',brl(c.bruto));
+    stat('Km total',(r.km||0)+' km')+stat('Tempo',hm(r.min))+stat('Ganho',brl(c.ganho))+stat('R$/km','R$'+f2(c.rkm))+stat('R$/h',r.min?'R$'+f2(c.rh):'—')+stat('Bruto',brl(c.bruto))+stat('Combustível',brl(c.comb))+stat('Líq. s/ fixo',brl(c.ganho-c.comb),c.ganho-c.comb<0?'negc':'pos')+stat('Custo fixo',brl(c.bruto-c.comb));
   el.innerHTML='<div class="sign-in"><div><div class="hrow"><h2>'+DOWL[d.getDay()]+'</h2><span class="hd">'+dm(r.data)+'</span></div>'+
     '<div class="lbl" style="margin-top:14px">Saldo do dia</div><div class="big'+(neg?' neg':' pos')+'"><span class="cur">R$</span>'+(neg?'-':'')+f2(Math.abs(c.saldo))+'</div>'+
     '<span class="chip'+(neg?' neg':'')+'"><i></i>'+(neg?'Prejuízo no dia':'Lucro no dia')+'</span></div>'+
