@@ -112,6 +112,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 
 .hrow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:2px}
 .hrow h2{margin:0;white-space:nowrap;font-size:clamp(20px,6vw,26px)}
+.hrow .wnav{flex:none;gap:6px}
+.hrow h2{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .hrow .hd{font-family:var(--f-num);font-weight:700;font-size:clamp(20px,6vw,26px);white-space:nowrap;line-height:1.05;letter-spacing:.03em}
 .gbig{margin:4px 0 16px}
 .gbig b{display:block;font-family:var(--f-num);font-weight:500;font-size:clamp(38px,10.5vw,46px);line-height:1.05;color:var(--good);font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -328,7 +330,7 @@ var FIXO=(1844.84+553.65+349.15+500)/30, DEF_PRICE=3.6, DEF_AUT=8;
 var $=function(id){return document.getElementById(id)};
 var DOW=['dom','seg','ter','qua','qui','sex','sáb'], DOWL=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
 var MON=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'], MONL=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-var state={monthOff:0,weekOff:0,sel:null,days:[],fuel:[],db:null,editing:null,editingFuel:null,showAll:false,mode:'trechos',trechos:[{}],ready:false};
+var state={monthOff:0,weekOff:0,hi:null,sel:null,days:[],fuel:[],db:null,editing:null,editingFuel:null,showAll:false,mode:'trechos',trechos:[{}],ready:false};
 
 /* ---------- utilidades ---------- */
 function pd(s){var p=s.split('-');return new Date(+p[0],+p[1]-1,+p[2])}
@@ -381,11 +383,12 @@ function stat(l,v,cls){return '<div class="stat"><span class="lbl">'+l+'</span><
 function renderHero(ch){
   var el=$('hero');
   if(!state.days.length){el.innerHTML='<div class="sign-in"><div><div class="lbl">Último dia lançado</div><h2>Nenhum dia ainda</h2><p style="margin:8px 0 0;color:var(--muted)">Lance o primeiro dia em “Lançar o dia”. Os números aparecem aqui.</p></div></div>';return}
-  var r=state.days[state.days.length-1],c=calc(r,ch),d=pd(r.data);
+  var n=state.days.length,hi=(state.hi==null||state.hi>n-1||state.hi<0)?n-1:state.hi;
+  var r=state.days[hi],c=calc(r,ch),d=pd(r.data);
   var neg=c.saldo<-0.004;
   var mid=r.folga?stat('Km total','0')+stat('Tempo','—')+stat('Ganho','R$0,00')+stat('Custo fixo',brl(FIXO))+stat('Bruto',brl(c.bruto))+stat('Tipo','Folga'):
-    stat('Km total',(r.km||0)+' km')+stat('Tempo',hm(r.min))+stat('Ganho',brl(c.ganho))+stat('R$/km','R$'+f2(c.rkm))+stat('R$/h',r.min?'R$'+f2(c.rh):'—')+stat('Bruto',brl(c.bruto))+stat('Combustível',brl(c.comb))+stat('Líq. s/ fixo',brl(c.ganho-c.comb),c.ganho-c.comb<0?'negc':'pos')+stat('Custo fixo',brl(c.bruto-c.comb));
-  el.innerHTML='<div class="sign-in"><div><div class="hrow"><h2>'+DOWL[d.getDay()]+'</h2><span class="hd">'+dm(r.data)+'</span></div>'+
+    stat('Km total',(r.km||0)+' km')+stat('Tempo',hm(r.min))+stat('Ganho',brl(c.ganho))+stat('R$/km','R$'+f2(c.rkm))+stat('R$/h',r.min?'R$'+f2(c.rh):'—')+stat('Bruto',brl(c.bruto));
+  el.innerHTML='<div class="sign-in"><div><div class="hrow"><h2>'+DOWL[d.getDay()]+'</h2><div class="wnav"><button type="button" class="warrow" data-h="-1" aria-label="Dia anterior"'+(hi>0?'':' hidden')+'>'+CHL+'</button><span class="hd">'+dm(r.data)+'</span><button type="button" class="warrow" data-h="1" aria-label="Próximo dia"'+(hi<n-1?'':' hidden')+'>'+CHR+'</button></div></div>'+
     '<div class="lbl" style="margin-top:14px">Saldo do dia</div><div class="big'+(neg?' neg':' pos')+'"><span class="cur">R$</span>'+(neg?'-':'')+f2(Math.abs(c.saldo))+'</div>'+
     '<span class="chip'+(neg?' neg':'')+'"><i></i>'+(neg?'Prejuízo no dia':'Lucro no dia')+'</span></div>'+
     '<div class="stats">'+mid+'</div></div>';
@@ -483,6 +486,7 @@ document.addEventListener('click',function(e){
   var t=e.target;if(!t||!t.closest||!state.days.length)return;
   var arrow=t.closest('.warrow');
   if(arrow){
+    if(arrow.hasAttribute('data-h')){var n=state.days.length,cur=(state.hi==null||state.hi>n-1)?n-1:state.hi;state.hi=Math.max(0,Math.min(n-1,cur+(+arrow.getAttribute('data-h'))));if(state.hi>=n-1)state.hi=null;renderHero(chains(state.fuel));return}
     if(arrow.hasAttribute('data-m')){state.monthOff+=+arrow.getAttribute('data-m');renderMonth(chains(state.fuel))}
     else{state.weekOff+=+arrow.getAttribute('data-w');state.sel=null;renderWeek(chains(state.fuel))}
     return}
