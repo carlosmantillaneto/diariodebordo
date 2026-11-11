@@ -61,14 +61,15 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .big{font-family:var(--f-num);font-weight:500;font-size:clamp(38px,10.5vw,46px);line-height:1.05;letter-spacing:-.005em;font-variant-numeric:tabular-nums;margin-top:6px}
 .big .cur{font-size:.55em;font-weight:500;margin-right:4px;vertical-align:.18em;color:var(--muted)}
 .big.pos{color:var(--good)}.big.neg{color:var(--bad)}
-.chip{display:inline-flex;align-items:center;gap:7px;margin-top:12px;border:1.5px solid var(--good);color:var(--good);border-radius:999px;padding:3px 12px 3px 9px;font-family:var(--f-num);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.07em}
+.chip{display:inline-flex;align-items:center;gap:7px;margin-top:0;border:1.5px solid var(--good);color:var(--good);border-radius:999px;padding:3px 12px 3px 9px;font-family:var(--f-num);font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.07em}
 .chip i{width:10px;height:10px;border-radius:50%;background:currentColor}
 .chip.neg{border-color:var(--bad);color:var(--bad)}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;align-content:start}
-.stat{padding:10px 12px 12px;border-top:1.5px solid var(--line)}
+.stat{padding:12px 12px 14px;border-top:1.5px solid var(--line)}
+.stat .lbl{font-size:12px}
 .stat:nth-child(3n+2),.stat:nth-child(3n){border-left:1.5px solid var(--line)}
-.stat b{display:block;font-family:var(--f-num);font-weight:700;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
-@media (max-width:420px){.stat b{font-size:21px}.stat{padding:8px 6px}}
+.stat b{display:block;font-family:var(--f-num);font-weight:700;font-size:clamp(19px,5.4vw,26px);line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:2px}
+
 
 /* painéis */
 .panel{background:var(--surface);border:1.5px solid var(--ink);border-radius:6px;padding:16px 18px 18px;min-width:0}
@@ -110,12 +111,14 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .wobs{margin:10px 0 0;font-size:13px;color:var(--muted)}
 
 
-.hrow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:2px}
-.hrow h2{margin:0;white-space:nowrap;font-size:clamp(20px,6vw,26px)}
+.hrow{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.hrow h2{margin:0;white-space:nowrap;font-size:22px;letter-spacing:.05em}
 .hrow .wnav{flex:none;gap:6px}
 .hrow h2{min-width:0;overflow:hidden;text-overflow:ellipsis}
-.hrow .hd{font-family:var(--f-num);font-weight:700;font-size:clamp(20px,6vw,26px);white-space:nowrap;line-height:1.05;letter-spacing:.03em}
+.hrow .wnav .meta{white-space:nowrap}
 .gbig{margin:4px 0 16px}
+.gbig b.negc{color:var(--bad)}
+#hero .gbig{margin:4px 0 12px}
 .gbig b{display:block;font-family:var(--f-num);font-weight:500;font-size:clamp(38px,10.5vw,46px);line-height:1.05;color:var(--good);font-variant-numeric:tabular-nums;white-space:nowrap}
 .kv2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1.5px solid var(--line)}
 .kv2>div{min-width:0;padding:12px 12px 14px;border-bottom:1.5px solid var(--line)}
@@ -388,8 +391,8 @@ function renderHero(ch){
   var neg=c.saldo<-0.004;
   var mid=r.folga?stat('Km total','0')+stat('Tempo','—')+stat('Ganho','R$0,00')+stat('Custo fixo',brl(FIXO))+stat('Bruto',brl(c.bruto))+stat('Tipo','Folga'):
     stat('Km total',(r.km||0)+' km')+stat('Tempo',hm(r.min))+stat('Ganho',brl(c.ganho))+stat('R$/km','R$'+f2(c.rkm))+stat('R$/h',r.min?'R$'+f2(c.rh):'—')+stat('Bruto',brl(c.bruto));
-  el.innerHTML='<div class="sign-in"><div><div class="hrow"><h2>'+DOWL[d.getDay()]+'</h2><div class="wnav"><button type="button" class="warrow" data-h="-1" aria-label="Dia anterior"'+(hi>0?'':' hidden')+'>'+CHL+'</button><span class="hd">'+dm(r.data)+'</span><button type="button" class="warrow" data-h="1" aria-label="Próximo dia"'+(hi<n-1?'':' hidden')+'>'+CHR+'</button></div></div>'+
-    '<div class="lbl" style="margin-top:14px">Saldo do dia</div><div class="big'+(neg?' neg':' pos')+'"><span class="cur">R$</span>'+(neg?'-':'')+f2(Math.abs(c.saldo))+'</div>'+
+  el.innerHTML='<div class="sign-in"><div><div class="hrow"><h2>'+DOWL[d.getDay()]+'</h2><div class="wnav"><button type="button" class="warrow" data-h="-1" aria-label="Dia anterior"'+(hi>0?'':' hidden')+'>'+CHL+'</button><span class="meta">'+dm(r.data)+'</span><button type="button" class="warrow" data-h="1" aria-label="Próximo dia"'+(hi<n-1?'':' hidden')+'>'+CHR+'</button></div></div>'+
+    '<div class="gbig"><span class="lbl">Saldo do dia</span><b class="'+(neg?'negc':'')+'">'+brl(c.saldo)+'</b></div>'+
     '<span class="chip'+(neg?' neg':'')+'"><i></i>'+(neg?'Prejuízo no dia':'Lucro no dia')+'</span></div>'+
     '<div class="stats">'+mid+'</div></div>';
 }
